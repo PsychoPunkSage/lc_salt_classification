@@ -7,9 +7,9 @@ optional OOD detection.
 
 Usage
 -----
-    python main.py --data-dir ../salts
-    python main.py --data-dir ../salts --ood-dir /path/to/ood_images
-    python main.py --data-dir ../salts --skip-viz --run-ablation
+    python main.py
+    python main.py --data-dir data/salts --ood-dir data/OOD
+    python main.py --skip-viz --run-ablation
 """
 
 from __future__ import annotations
@@ -53,8 +53,8 @@ def parse_args() -> argparse.Namespace:
         description="Antibiotic salt classification from LC birefringence images."
     )
     p.add_argument(
-        "--data-dir", default="../salts",
-        help="Path to folder containing the 6 salt zip files  [default: ../salts]",
+        "--data-dir", default="data/salts",
+        help="Path to folder containing the 6 salt zip files  [default: data/salts]",
     )
     p.add_argument(
         "--output-dir", default="outputs",
