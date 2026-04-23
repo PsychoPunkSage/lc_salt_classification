@@ -32,7 +32,7 @@ def extract_features(
     ----------
     images : ndarray, shape (N, H, W, 3), float32, range [0, 1]
     """
-    # (N, H, W, C) → (N, C, H, W)
+    # (N, H, W, C) -> (N, C, H, W)
     tensor = torch.FloatTensor(images).permute(0, 3, 1, 2)
     dataset = TensorDataset(tensor)
     loader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
@@ -42,7 +42,7 @@ def extract_features(
         for (batch,) in tqdm(loader, desc="ResNet-50 feature extraction"):
             batch = batch.to(device)
             feats = resnet(batch)
-            feats = feats.squeeze(-1).squeeze(-1)   # (B, 2048, 1, 1) → (B, 2048)
+            feats = feats.squeeze(-1).squeeze(-1)   # (B, 2048, 1, 1) -> (B, 2048)
             if feats.dim() == 1:
                 feats = feats.unsqueeze(0)
             features_list.append(feats.cpu())
@@ -50,7 +50,7 @@ def extract_features(
     extracted = torch.cat(features_list, dim=0).numpy()
     torch.cuda.empty_cache()
 
-    print(f"\n  Extracted features shape: {extracted.shape}  (images × 2048-dim vectors)")
+    print(f"\n  Extracted features shape: {extracted.shape}  (images x 2048-dim vectors)")
     return extracted
 
 
@@ -59,7 +59,7 @@ def select_top_features(
     labels: list[str],
     k: int = 100,
 ) -> tuple[np.ndarray, SelectKBest, np.ndarray, np.ndarray]:
-    """Apply ANOVA F-statistic SelectKBest to reduce (N, 2048) → (N, k).
+    """Apply ANOVA F-statistic SelectKBest to reduce (N, 2048) -> (N, k).
 
     Returns
     -------

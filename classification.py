@@ -39,7 +39,7 @@ def make_split(
 
 
 # ---------------------------------------------------------------------------
-# Random Forest — 6-class
+# Random Forest - 6-class
 # ---------------------------------------------------------------------------
 
 def train_random_forest(
@@ -76,7 +76,7 @@ def train_random_forest(
     sns.heatmap(cm, annot=True, fmt="d", cmap="Blues",
                 xticklabels=SALT_ORDER, yticklabels=SALT_ORDER,
                 ax=ax, linewidths=0.5, linecolor="gray")
-    ax.set_title("Confusion Matrix — 6-Class Antibiotic Salt Classification",
+    ax.set_title("Confusion Matrix - 6-Class Antibiotic Salt Classification",
                  fontsize=14, fontweight="bold", pad=15)
     ax.set_ylabel("True Salt Class", fontsize=12)
     ax.set_xlabel("Predicted Salt Class", fontsize=12)
@@ -93,7 +93,7 @@ def train_random_forest(
     ax.bar(range(20), importances[indices],
            color=plt.cm.viridis(np.linspace(0.2, 0.9, 20)),
            edgecolor="black", linewidth=0.6)
-    ax.set_title("Top 20 Feature Importances — Random Forest",
+    ax.set_title("Top 20 Feature Importances - Random Forest",
                  fontsize=13, fontweight="bold")
     ax.set_xlabel("Feature Rank (by importance)", fontsize=11)
     ax.set_ylabel("Feature Importance (Gini)", fontsize=11)
@@ -349,7 +349,7 @@ def run_pairwise_rf(
     for j in range(len(all_pairs), len(axes_flat)):
         axes_flat[j].set_visible(False)
 
-    plt.suptitle("Confusion Matrices — All 15 Pairwise Antibiotic Salt Classifications",
+    plt.suptitle("Confusion Matrices - All 15 Pairwise Antibiotic Salt Classifications",
                  fontsize=16, fontweight="bold", y=1.01)
     plt.tight_layout()
     plt.savefig(output_dir / "pairwise_confusion_matrices.png",
@@ -366,7 +366,7 @@ def run_pairwise_rf(
     results_df.to_csv(csv_path)
     print(f"  Saved: {csv_path}")
 
-    print("\n  PAIRWISE RESULTS — RANKED BY ACCURACY")
+    print("\n  PAIRWISE RESULTS - RANKED BY ACCURACY")
     print("  " + "=" * 68)
     print(results_df[["Pair", "Test_Accuracy", "Test_Samples"]].to_string())
     print(f"\n  Best pair  : {results_df.iloc[0]['Pair']}  "
@@ -388,7 +388,7 @@ def run_pairwise_rf(
     for bar, acc in zip(bars, results_df["Test_Accuracy"]):
         ax2.text(bar.get_width() + 0.005, bar.get_y() + bar.get_height() / 2,
                  f"{acc:.1%}", va="center", fontsize=9)
-    ax2.set_title("Pairwise Classification Accuracy — All 15 Antibiotic Salt Pairs",
+    ax2.set_title("Pairwise Classification Accuracy - All 15 Antibiotic Salt Pairs",
                   fontsize=14, fontweight="bold")
     ax2.set_xlabel("Test Accuracy", fontsize=12)
     ax2.set_ylabel("Salt Pair", fontsize=12)
@@ -463,7 +463,7 @@ def run_mlp_ablation(
 
     ax.set_xlabel("Number of hidden layers", fontsize=11)
     ax.set_ylabel("Test accuracy", fontsize=11)
-    ax.set_title("MLP architecture search — accuracy vs depth vs width\n"
+    ax.set_title("MLP architecture search - accuracy vs depth vs width\n"
                  "(bubble size = total neurons)",
                  fontsize=12, fontweight="bold", pad=10)
     ax.set_xticks([1, 2, 3, 4, 5])

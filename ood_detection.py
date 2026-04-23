@@ -80,7 +80,7 @@ def run_ood_detection(
         ax.hist(max_conf, bins=15, color=color, edgecolor="black", alpha=0.8)
         ax.axvline(confidence_threshold, color="red", linestyle="--", linewidth=2,
                    label=f"Threshold = {confidence_threshold}")
-        ax.set_title(f"{name} — Max Confidence Distribution\n"
+        ax.set_title(f"{name} - Max Confidence Distribution\n"
                      f"over {len(ood_images)} OOD Images", fontweight="bold")
         ax.set_xlabel("Max Predicted Probability")
         ax.set_ylabel("Number of Images")
@@ -112,7 +112,7 @@ def run_ood_detection(
         for bar, p in zip(bars, probs):
             ax.text(bar.get_x() + bar.get_width() / 2, p + 0.02,
                     f"{p:.2f}", ha="center", fontsize=8)
-    plt.suptitle(f"Class Probability Distribution — {img_names[IMG_IDX]}",
+    plt.suptitle(f"Class Probability Distribution - {img_names[IMG_IDX]}",
                  fontsize=13, fontweight="bold")
     plt.tight_layout()
     plt.savefig(output_dir / "ood_prob_distribution.png",
@@ -145,7 +145,7 @@ def run_ood_detection(
 
     # Summary printout
     print("\n  " + "=" * 58)
-    print(f"  OOD DETECTION RESULTS  (threshold τ = {confidence_threshold})")
+    print(f"  OOD DETECTION RESULTS  (threshold tau = {confidence_threshold})")
     print("  " + "=" * 58)
     for name in models_dict:
         max_conf = max_confs[name]

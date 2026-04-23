@@ -15,7 +15,7 @@ def compute_initial_tsne(
     perplexity: int = 30,
     n_iter: int = 1000,
 ) -> np.ndarray:
-    """PCA → t-SNE (2D) on the full (pre-DBSCAN) feature matrix.
+    """PCA -> t-SNE (2D) on the full (pre-DBSCAN) feature matrix.
 
     Returns
     -------
@@ -24,7 +24,7 @@ def compute_initial_tsne(
     print(f"\n  Running initial t-SNE 2D (perplexity={perplexity}, n_iter={n_iter})...")
     pca = PCA(n_components=min(pca_components, features.shape[1]), random_state=42)
     features_pca = pca.fit_transform(features)
-    tsne = TSNE(n_components=2, perplexity=perplexity, n_iter=n_iter, random_state=42)
+    tsne = TSNE(n_components=2, perplexity=perplexity, max_iter=n_iter, random_state=42)
     return tsne.fit_transform(features_pca)
 
 
@@ -39,7 +39,7 @@ def remove_outliers_dbscan(
 ) -> tuple[np.ndarray, list[str], int]:
     """Keep all non-noise points (cluster_label != -1) from each salt class.
 
-    DBSCAN runs in t-SNE space per class — same behaviour as the notebook.
+    DBSCAN runs in t-SNE space per class - same behaviour as the notebook.
 
     Returns
     -------
@@ -94,7 +94,7 @@ def remove_outliers_dbscan(
     for salt, count in post_counts.items():
         assert count >= min_class_size, (
             f"Salt '{salt}' has only {count} samples after DBSCAN "
-            f"— below minimum {min_class_size}"
+            f"- below minimum {min_class_size}"
         )
 
     print("\n  Post-DBSCAN class distribution:")

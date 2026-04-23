@@ -1,8 +1,8 @@
 """
 LC Salt Classification Pipeline
 ================================
-End-to-end pipeline: data loading → ResNet-50 feature extraction →
-DBSCAN outlier removal → dimensionality reduction → classification →
+End-to-end pipeline: data loading -> ResNet-50 feature extraction ->
+DBSCAN outlier removal -> dimensionality reduction -> classification ->
 optional OOD detection.
 
 Usage
@@ -117,7 +117,7 @@ def main() -> None:
     if not args.skip_viz:
         plot_tsne_from_coords(
             tsne_before, labels,
-            "t-SNE 2D — Antibiotic Salt Classes (Before Outlier Removal)",
+            "t-SNE 2D - Antibiotic Salt Classes (Before Outlier Removal)",
             output_dir / "tsne_before_dbscan_2d.png",
         )
 
@@ -138,7 +138,7 @@ def main() -> None:
     if not args.skip_viz:
         tsne_clean_2d = plot_tsne_2d(
             features, labels,
-            "t-SNE 2D — Antibiotic Salt Classes (After Outlier Removal)",
+            "t-SNE 2D - Antibiotic Salt Classes (After Outlier Removal)",
             output_dir / "tsne_clean_2d.png",
             pca_components=PCA_COMPONENTS_TSNE,
             perplexity=tsne_perplexity,
@@ -146,7 +146,7 @@ def main() -> None:
         )
         tsne_clean_3d = plot_tsne_3d(
             features, labels,
-            "t-SNE 3D — Antibiotic Salt Classes (After Outlier Removal)",
+            "t-SNE 3D - Antibiotic Salt Classes (After Outlier Removal)",
             output_dir / "tsne_clean_3d.png",
             pca_components=PCA_COMPONENTS_TSNE,
             perplexity=tsne_perplexity,
@@ -162,7 +162,7 @@ def main() -> None:
         plot_centroid_overlay(tsne_clean_2d, labels,
                               output_dir / "tsne_centroid_overlay.png")
     else:
-        # Still need t-SNE coords for cluster metrics — compute silently
+        # Still need t-SNE coords for cluster metrics - compute silently
         tsne_clean_2d = plot_tsne_2d(
             features, labels,
             "t-SNE 2D (clean)",

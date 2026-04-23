@@ -3,7 +3,7 @@ import numpy as np
 import torch
 
 # ============================================================
-# CONFIGURATION — edit these values to reconfigure the pipeline
+# CONFIGURATION - edit these values to reconfigure the pipeline
 # ============================================================
 
 SALT_LIST = [

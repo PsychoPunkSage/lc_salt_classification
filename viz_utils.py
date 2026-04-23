@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import umap as umap_lib
-from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 — registers 3d projection
+from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 - registers 3d projection
 from scipy.spatial.distance import pdist
 from sklearn.decomposition import PCA
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
@@ -16,7 +16,7 @@ from sklearn.manifold import MDS, TSNE
 from sklearn.metrics import silhouette_score
 
 # ---------------------------------------------------------------------------
-# Colour scheme — built once, imported everywhere
+# Colour scheme - built once, imported everywhere
 # ---------------------------------------------------------------------------
 
 SALT_ORDER: list[str] = sorted([
@@ -42,7 +42,7 @@ def _run_pca_tsne(
     pca = PCA(n_components=min(pca_components, features.shape[1]), random_state=42)
     features_pca = pca.fit_transform(features)
     tsne = TSNE(n_components=n_components, perplexity=perplexity,
-                n_iter=n_iter, random_state=42)
+                max_iter=n_iter, random_state=42)
     return tsne.fit_transform(features_pca)
 
 
@@ -113,7 +113,7 @@ def plot_tsne_from_coords(
     title: str,
     output_path: str | Path,
 ) -> None:
-    """Replot using pre-computed 2D t-SNE coordinates — avoids re-running t-SNE."""
+    """Replot using pre-computed 2D t-SNE coordinates - avoids re-running t-SNE."""
     plt.figure(figsize=(14, 10))
     for salt in [s for s in SALT_ORDER if s in labels]:
         mask = np.array(labels) == salt
@@ -275,7 +275,7 @@ def plot_umap(
                      ha="center",
                      bbox=dict(boxstyle="round,pad=0.2", facecolor="white", alpha=0.7))
 
-    plt.title("UMAP — Antibiotic Salt Classes (Meaningful Inter-Class Distances)",
+    plt.title("UMAP - Antibiotic Salt Classes (Meaningful Inter-Class Distances)",
               fontsize=16, fontweight="bold")
     plt.xlabel("UMAP Component 1", fontsize=12)
     plt.ylabel("UMAP Component 2", fontsize=12)

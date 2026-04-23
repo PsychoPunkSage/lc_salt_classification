@@ -1,4 +1,4 @@
-"""Load antibiotic salt images directly from zip files — no extraction to disk."""
+"""Load antibiotic salt images directly from zip files - no extraction to disk."""
 
 from __future__ import annotations
 
@@ -83,7 +83,7 @@ def plot_class_distribution(
             bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.5,
             str(v), ha="center", va="bottom", fontsize=11, fontweight="bold",
         )
-    ax.set_title("Class Distribution — Antibiotic Salt Images (1 mM)",
+    ax.set_title("Class Distribution - Antibiotic Salt Images (1 mM)",
                  fontsize=14, fontweight="bold")
     ax.set_xlabel("Antibiotic Salt", fontsize=12)
     ax.set_ylabel("Number of Images", fontsize=12)
@@ -104,4 +104,4 @@ def plot_class_distribution(
     ratio = max_c / min_c
     print(f"\n  Imbalance ratio (max/min): {ratio:.2f}")
     if ratio > 1.5:
-        print("  WARNING: class imbalance detected — using class_weight='balanced'.")
+        print("  WARNING: class imbalance detected - using class_weight='balanced'.")
