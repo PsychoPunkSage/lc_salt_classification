@@ -96,10 +96,8 @@ All files are saved to `--output-dir` (default: `outputs/`):
 
 | Model | Test Accuracy |
 |---|---|
-| Random Forest | 83.8% |
-| MLP (512-256) | 88.2% |
-| SVM (RBF, C=10) | — |
-| Gradient Boosting | — |
+| Random Forest | 88.4% |
+| MLP (512-256) | 92.8% |
 | **Pairwise RF (mean)** | **94.4%** |
 
 ---
