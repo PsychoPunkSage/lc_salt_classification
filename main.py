@@ -27,7 +27,7 @@ from config import (
 )
 from classification import (
     make_split, plot_model_comparison, run_mlp_ablation, run_pairwise_rf,
-    train_gbm, train_mlp, train_random_forest, train_svm,
+    train_mlp, train_random_forest,
 )
 from data_loader import load_images_from_zips, plot_class_distribution
 from feature_extractor import (
@@ -125,7 +125,7 @@ def main() -> None:
     _section("4. DBSCAN OUTLIER REMOVAL")
     # ------------------------------------------------------------------ #
     features, labels, tsne_perplexity = remove_outliers_dbscan(
-        features, tsne_before, labels,
+        features, labels,
         eps=DBSCAN_EPS,
         min_samples=DBSCAN_MIN_SAMPLES,
         warn_threshold=DBSCAN_REMOVAL_WARN_THRESHOLD,
@@ -188,16 +188,9 @@ def main() -> None:
     mlp_model, mlp_acc = train_mlp(
         X_train, X_test, y_train, y_test, output_dir, rf_acc
     )
-    svm_model, svm_acc = train_svm(
-        X_train, X_test, y_train, y_test, output_dir, rf_acc, mlp_acc
-    )
-    gbm_model, gbm_acc = train_gbm(
-        X_train, X_test, y_train, y_test, output_dir, rf_acc, mlp_acc, svm_acc
-    )
 
     plot_model_comparison(
-        {"Random Forest": rf_acc, "MLP": mlp_acc,
-         "SVM": svm_acc, "Gradient Boosting": gbm_acc},
+        {"Random Forest": rf_acc, "MLP": mlp_acc},
         output_dir,
     )
 
@@ -224,8 +217,6 @@ def main() -> None:
     print(f"\n  [6-CLASS CLASSIFICATION]")
     print(f"    Random Forest       : {rf_acc*100:.1f}%")
     print(f"    MLP                 : {mlp_acc*100:.1f}%")
-    print(f"    SVM                 : {svm_acc*100:.1f}%")
-    print(f"    Gradient Boosting   : {gbm_acc*100:.1f}%")
     print(f"\n  [PAIRWISE (15 pairs)]")
     print(f"    Mean accuracy       : {results_df['Test_Accuracy'].mean():.4f}")
     print(f"    Best pair           : {results_df.iloc[0]['Pair']}"

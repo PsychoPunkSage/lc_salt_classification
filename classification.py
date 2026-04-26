@@ -1,4 +1,4 @@
-"""All classifiers: RF, MLP, SVM, GBM, pairwise RF, and MLP ablation."""
+"""All classifiers: RF, MLP, pairwise RF, and MLP ablation."""
 
 from __future__ import annotations
 
@@ -10,11 +10,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
-from sklearn.svm import SVC
+from sklearn.preprocessing import StandardScaler
 from tqdm import tqdm
 
 from viz_utils import SALT_ORDER
@@ -122,18 +122,25 @@ def train_mlp(
     output_dir: Path,
     rf_accuracy: float,
 ) -> tuple[MLPClassifier, float]:
+    # StandardScaler is critical: ResNet features are unscaled ReLU activations
+    # (range 0-5+), MLP is highly sensitive to feature scale
+    scaler = StandardScaler()
+    X_tr = scaler.fit_transform(X_train)
+    X_te = scaler.transform(X_test)
+
     mlp = MLPClassifier(
-        hidden_layer_sizes=(512, 256),
+        hidden_layer_sizes=(512,),
         activation="relu",
         solver="adam",
-        max_iter=2000,
-        tol=1e-4,
-        n_iter_no_change=20,
+        learning_rate_init=0.001,
+        max_iter=3000,
+        tol=1e-5,
+        n_iter_no_change=30,
         random_state=42,
     )
-    mlp.fit(X_train, list(y_train))
-    y_pred = mlp.predict(X_test)
-    accuracy = mlp.score(X_test, list(y_test))
+    mlp.fit(X_tr, list(y_train))
+    y_pred = mlp.predict(X_te)
+    accuracy = mlp.score(X_te, list(y_test))
 
     print("\n  " + "=" * 58)
     print("  NEURAL NETWORK (MLP) CLASSIFIER RESULTS")
@@ -146,7 +153,7 @@ def train_mlp(
 
     cm = confusion_matrix(y_test, y_pred, labels=SALT_ORDER)
     plt.figure(figsize=(9, 7))
-    sns.heatmap(cm, annot=True, fmt="d", cmap="Oranges",
+    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues",
                 xticklabels=SALT_ORDER, yticklabels=SALT_ORDER)
     plt.title("Confusion Matrix: Neural Network (MLP) Classifier",
               fontsize=14, fontweight="bold")
@@ -162,101 +169,6 @@ def train_mlp(
 
 
 # ---------------------------------------------------------------------------
-# SVM
-# ---------------------------------------------------------------------------
-
-def train_svm(
-    X_train: np.ndarray,
-    X_test: np.ndarray,
-    y_train: list[str],
-    y_test: list[str],
-    output_dir: Path,
-    rf_accuracy: float,
-    mlp_accuracy: float,
-) -> tuple[SVC, float]:
-    svm = SVC(
-        kernel="rbf", C=10, gamma="scale",
-        probability=True, class_weight="balanced", random_state=42,
-    )
-    svm.fit(X_train, list(y_train))
-    y_pred = svm.predict(X_test)
-    accuracy = svm.score(X_test, list(y_test))
-
-    print("\n  " + "=" * 58)
-    print("  SVM CLASSIFIER RESULTS")
-    print("  " + "=" * 58)
-    print(f"  Test Accuracy : {accuracy:.4f} ({accuracy*100:.1f}%)")
-    print(f"  RF  Accuracy  : {rf_accuracy:.4f}")
-    print(f"  MLP Accuracy  : {mlp_accuracy:.4f}")
-    print()
-    print(classification_report(y_test, y_pred))
-
-    cm = confusion_matrix(y_test, y_pred, labels=SALT_ORDER)
-    plt.figure(figsize=(9, 7))
-    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues",
-                xticklabels=SALT_ORDER, yticklabels=SALT_ORDER)
-    plt.title("Confusion Matrix: SVM Classifier", fontsize=14, fontweight="bold")
-    plt.xlabel("Predicted Salt")
-    plt.ylabel("True Salt")
-    plt.xticks(rotation=30, ha="right")
-    plt.tight_layout()
-    plt.savefig(output_dir / "svm_confusion_matrix.png", dpi=150, bbox_inches="tight")
-    plt.close()
-    print(f"  Saved: {output_dir / 'svm_confusion_matrix.png'}")
-
-    return svm, accuracy
-
-
-# ---------------------------------------------------------------------------
-# Gradient Boosting
-# ---------------------------------------------------------------------------
-
-def train_gbm(
-    X_train: np.ndarray,
-    X_test: np.ndarray,
-    y_train: list[str],
-    y_test: list[str],
-    output_dir: Path,
-    rf_accuracy: float,
-    mlp_accuracy: float,
-    svm_accuracy: float,
-) -> tuple[GradientBoostingClassifier, float]:
-    gbm = GradientBoostingClassifier(
-        n_estimators=200, learning_rate=0.1,
-        max_depth=4, subsample=0.8, random_state=42,
-    )
-    gbm.fit(X_train, list(y_train))
-    y_pred = gbm.predict(X_test)
-    accuracy = gbm.score(X_test, list(y_test))
-
-    print("\n  " + "=" * 58)
-    print("  GRADIENT BOOSTING CLASSIFIER RESULTS")
-    print("  " + "=" * 58)
-    print(f"  Test Accuracy : {accuracy:.4f} ({accuracy*100:.1f}%)")
-    print(f"  RF  Accuracy  : {rf_accuracy:.4f}")
-    print(f"  MLP Accuracy  : {mlp_accuracy:.4f}")
-    print(f"  SVM Accuracy  : {svm_accuracy:.4f}")
-    print()
-    print(classification_report(y_test, y_pred))
-
-    cm = confusion_matrix(y_test, y_pred, labels=SALT_ORDER)
-    plt.figure(figsize=(9, 7))
-    sns.heatmap(cm, annot=True, fmt="d", cmap="Greens",
-                xticklabels=SALT_ORDER, yticklabels=SALT_ORDER)
-    plt.title("Confusion Matrix: Gradient Boosting Classifier",
-              fontsize=14, fontweight="bold")
-    plt.xlabel("Predicted Salt")
-    plt.ylabel("True Salt")
-    plt.xticks(rotation=30, ha="right")
-    plt.tight_layout()
-    plt.savefig(output_dir / "gbm_confusion_matrix.png", dpi=150, bbox_inches="tight")
-    plt.close()
-    print(f"  Saved: {output_dir / 'gbm_confusion_matrix.png'}")
-
-    return gbm, accuracy
-
-
-# ---------------------------------------------------------------------------
 # Model comparison bar chart
 # ---------------------------------------------------------------------------
 
@@ -266,11 +178,11 @@ def plot_model_comparison(
 ) -> None:
     model_names = list(accuracies.keys())
     model_accs  = list(accuracies.values())
-    colors = ["steelblue", "darkorange", "mediumpurple", "mediumseagreen"]
+    colors = ["#4393C3", "#D6604D"]
 
-    plt.figure(figsize=(9, 5))
+    plt.figure(figsize=(6, 5))
     bars = plt.bar(model_names, [a * 100 for a in model_accs],
-                   color=colors[:len(model_names)], edgecolor="black", width=0.5)
+                   color=colors[:len(model_names)], edgecolor="black", width=0.4)
     plt.ylim(70, 100)
     plt.ylabel("Test Accuracy (%)", fontsize=12)
     plt.title("Model Comparison: Test Accuracy", fontsize=14, fontweight="bold")
@@ -414,6 +326,10 @@ def run_mlp_ablation(
     y_test: list[str],
     output_dir: Path,
 ) -> None:
+    scaler = StandardScaler()
+    X_train = scaler.fit_transform(X_train)
+    X_test  = scaler.transform(X_test)
+
     layer_configs = {
         1: [(64,), (128,), (256,), (512,)],
         2: [(64, 32), (128, 64), (256, 128), (512, 256)],

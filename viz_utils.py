@@ -42,7 +42,7 @@ def _run_pca_tsne(
     pca = PCA(n_components=min(pca_components, features.shape[1]), random_state=42)
     features_pca = pca.fit_transform(features)
     tsne = TSNE(n_components=n_components, perplexity=perplexity,
-                max_iter=n_iter, random_state=42)
+                max_iter=n_iter, random_state=42, method="exact")
     return tsne.fit_transform(features_pca)
 
 
@@ -168,7 +168,7 @@ def plot_mds(
     print("\n  Computing MDS (preserves inter-group distances)...")
     pca = PCA(n_components=min(pca_components, features.shape[1]), random_state=42)
     features_pca = pca.fit_transform(features)
-    mds = MDS(n_components=2, random_state=42, dissimilarity="euclidean")
+    mds = MDS(n_components=2, random_state=42, n_init=1, dissimilarity="euclidean")
     coords = mds.fit_transform(features_pca)
 
     salts_present = [s for s in SALT_ORDER if s in labels]
@@ -254,7 +254,7 @@ def plot_umap(
 
     reducer = umap_lib.UMAP(
         n_neighbors=n_neighbors, min_dist=min_dist,
-        n_components=2, metric="euclidean", random_state=42,
+        n_components=2, metric="euclidean", random_state=42, n_jobs=1,
     )
     coords = reducer.fit_transform(features_pca)
 

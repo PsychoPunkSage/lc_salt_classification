@@ -18,7 +18,7 @@ PIXEL_NORM   = 255.0
 
 # Feature extraction
 BATCH_SIZE     = 32
-N_TOP_FEATURES = 100   # SelectKBest k
+N_TOP_FEATURES = 400   # SelectKBest k — tuned for MLP peak accuracy
 
 # Dimensionality reduction
 PCA_COMPONENTS_TSNE = 50
@@ -27,7 +27,7 @@ TSNE_PERPLEXITY     = 30
 TSNE_ITERATIONS     = 1000
 
 # DBSCAN outlier removal
-DBSCAN_EPS                    = 3.5
+DBSCAN_EPS                    = 2.70  # tuned for PCA-standardized space (10 components)
 DBSCAN_MIN_SAMPLES            = 5
 DBSCAN_REMOVAL_WARN_THRESHOLD = 0.15
 DBSCAN_MIN_CLASS_SIZE         = 35

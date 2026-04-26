@@ -2,7 +2,7 @@
 
 End-to-end machine learning pipeline for classifying six structurally similar beta-lactam antibiotic salts from liquid crystal (LC) birefringence microscopy images.
 
-**ResNet-50** features → **DBSCAN** outlier removal → **t-SNE / MDS / UMAP / LDA** visualisation → **Random Forest / MLP / SVM / Gradient Boosting** classification → optional **OOD detection**.
+**ResNet-50** features → **DBSCAN** outlier removal → **t-SNE / MDS / UMAP / LDA** visualisation → **Random Forest / MLP** classification → optional **OOD detection**.
 
 ---
 
@@ -14,11 +14,11 @@ Six antibiotic salt classes, each at 1 mM concentration, imaged under cross-pola
 |---|---|---|
 | Azlocillin | 67 | 65 |
 | Carbenicillin | 64 | 62 |
-| Oxacillin | 73 | 67 |
-| Penicillin | 55 | 48 |
-| Pipercilin | 47 | 36 |
-| Ticarcillin | 60 | 60 |
-| **Total** | **366** | **338** |
+| Oxacillin | 73 | 68 |
+| Penicillin | 55 | 54 |
+| Pipercilin | 47 | 45 |
+| Ticarcillin | 60 | 55 |
+| **Total** | **366** | **349** |
 
 Each zip file unpacks to a flat folder of `square_XXXX.jpg` images (224 × 224 px, RGB). The pipeline reads images **directly from the zip files** — no manual extraction needed.
 
@@ -79,8 +79,6 @@ All files are saved to `--output-dir` (default: `outputs/`):
 | `rf_confusion_matrix.png` | Random Forest confusion matrix |
 | `rf_feature_importance.png` | Top-20 Gini feature importances |
 | `mlp_confusion_matrix.png` | MLP confusion matrix |
-| `svm_confusion_matrix.png` | SVM confusion matrix |
-| `gbm_confusion_matrix.png` | Gradient Boosting confusion matrix |
 | `model_comparison.png` | Side-by-side accuracy bar chart |
 | `pairwise_confusion_matrices.png` | 5 × 3 grid of all 15 pairwise CMs |
 | `pairwise_accuracy_barplot.png` | Ranked horizontal bar chart |
@@ -96,9 +94,9 @@ All files are saved to `--output-dir` (default: `outputs/`):
 
 | Model | Test Accuracy |
 |---|---|
-| Random Forest | 88.4% |
-| MLP (512-256) | 92.8% |
-| **Pairwise RF (mean)** | **94.4%** |
+| Random Forest | 92.9% |
+| MLP (512,) | 95.7% |
+| **Pairwise RF (mean)** | **96.2%** |
 
 ---
 
@@ -110,9 +108,9 @@ lc_salt_classification/
 ├── config.py                # All hyperparameters
 ├── data_loader.py           # In-memory zip loading
 ├── feature_extractor.py     # ResNet-50 + SelectKBest
-├── outlier_removal.py       # DBSCAN in t-SNE space
+├── outlier_removal.py       # DBSCAN in PCA space
 ├── viz_utils.py             # All dimensionality-reduction plots
-├── classification.py        # RF, MLP, SVM, GBM, pairwise, ablation
+├── classification.py        # RF, MLP, pairwise, ablation
 ├── ood_detection.py         # Softmax-confidence OOD flagging
 ├── requirements.txt
 └── outputs/                 # Auto-created; all generated files land here
